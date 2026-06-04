@@ -99,11 +99,11 @@ def convert_modality(modality: str):
 
 
 def write_yaml(modality: str):
-    mod_dir = (OUT / modality).resolve()
     yaml_path = ROOT / "configs" / f"{modality.lower()}_detection.yaml"
     yaml_path.parent.mkdir(exist_ok=True)
     content = f"""# YOLOv8 dataset config for PolypDB {modality} modality
-path: {mod_dir}
+# Run scripts/coco_to_yolo.py first to generate yolo_labels/
+path: yolo_labels/{modality}
 train: train/images
 val:   val/images
 test:  test/images

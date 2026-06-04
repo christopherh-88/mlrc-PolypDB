@@ -72,6 +72,7 @@ train_results = model.train(
     name=f"{args.model}_{args.modality}",
     exist_ok=True,
     verbose=True,
+    amp=False,        # MPS does not support AMP; disabling prevents loss crash
     # match paper augmentation where possible
     flipud=0.5,
     fliplr=0.5,

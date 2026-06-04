@@ -4,6 +4,7 @@ Handles variable image sizes, mask loading, and the paper's augmentation set:
 random rotation, horizontal flip, vertical flip, coarse dropout.
 """
 import json
+import os
 from pathlib import Path
 
 import albumentations as A
@@ -13,8 +14,9 @@ import torch
 from torch.utils.data import Dataset
 
 ROOT = Path(__file__).parent.parent
-DATA = ROOT / "data" / "modality"
-COCO = ROOT / "coco_labels"
+# Allow override via env var so the same code works on Kaggle
+DATA = Path(os.environ.get("POLYPDB_DATA_ROOT", str(ROOT / "data" / "modality")))
+COCO = Path(os.environ.get("POLYPDB_COCO_ROOT", str(ROOT / "coco_labels")))
 
 # Paper augmentation set (Table 2 / Section 3 of PolypDB)
 TRAIN_TRANSFORMS = A.Compose([
@@ -99,7 +101,11 @@ class PolypDataset(Dataset):
 
 def get_dataloaders(modality: str, batch_size: int = 8, num_workers: int = 4):
     """Returns train, val, test DataLoaders for a given modality."""
+    import torch
     from torch.utils.data import DataLoader
+    pin = torch.cuda.is_available()  # pin_memory unsupported on MPS
+    # macOS requires spawn to avoid fork-related deadlocks with cv2 workers
+    mp_ctx = "spawn" if num_workers > 0 else None
     loaders = {}
     for split in ["train", "val", "test"]:
         ds = PolypDataset(modality, split)
@@ -109,7 +115,9 @@ def get_dataloaders(modality: str, batch_size: int = 8, num_workers: int = 4):
             batch_size=batch_size,
             shuffle=shuffle,
             num_workers=num_workers,
-            pin_memory=True,
+            pin_memory=pin,
+            persistent_workers=(num_workers > 0),
+            multiprocessing_context=mp_ctx,
             drop_last=(split == "train"),
         )
     return loaders["train"], loaders["val"], loaders["test"]
