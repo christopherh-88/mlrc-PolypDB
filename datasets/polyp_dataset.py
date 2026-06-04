@@ -104,8 +104,9 @@ def get_dataloaders(modality: str, batch_size: int = 8, num_workers: int = 4):
     import torch
     from torch.utils.data import DataLoader
     pin = torch.cuda.is_available()  # pin_memory unsupported on MPS
-    # macOS requires spawn to avoid fork-related deadlocks with cv2 workers
-    mp_ctx = "spawn" if num_workers > 0 else None
+    import platform
+    # spawn required on macOS; fork is fine on Linux (Kaggle/CUDA)
+    mp_ctx = "spawn" if (num_workers > 0 and platform.system() == "Darwin") else None
     loaders = {}
     for split in ["train", "val", "test"]:
         ds = PolypDataset(modality, split)
