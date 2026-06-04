@@ -1,0 +1,9 @@
+# YOLOv8 combined config — uses WLI (largest modality)
+# Run scripts/coco_to_yolo.py first to generate yolo_labels/
+path: yolo_labels/WLI
+train: train/images
+val:   val/images
+test:  test/images
+
+nc: 1
+names: ["polyp"]

@@ -1,0 +1,10 @@
+# YOLOv8 center-wise config for Karolinska
+# Modalities: WLI
+# Run scripts/coco_to_yolo_centerwise.py first to generate yolo_labels/center/
+path: yolo_labels/center/Karolinska
+train: WLI/train/images
+val:   WLI/val/images
+test:  WLI/test/images
+
+nc: 1
+names: ["polyp"]

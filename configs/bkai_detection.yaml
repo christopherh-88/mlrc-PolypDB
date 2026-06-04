@@ -1,0 +1,10 @@
+# YOLOv8 center-wise config for BKAI
+# Modalities: BLI, FICE, LCI, WLI
+# Run scripts/coco_to_yolo_centerwise.py first to generate yolo_labels/center/
+path: yolo_labels/center/BKAI
+train: BLI/train/images
+val:   BLI/val/images
+test:  BLI/test/images
+
+nc: 1
+names: ["polyp"]

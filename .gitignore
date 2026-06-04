@@ -1,0 +1,14 @@
+data/
+yolo_labels/
+__pycache__/
+*.pyc
+*.pth
+*.pt
+runs/
+wandb/
+.DS_Store
+*.egg-info/
+dist/
+build/
+sanity_check_*.png
+yolo_verify_*.png

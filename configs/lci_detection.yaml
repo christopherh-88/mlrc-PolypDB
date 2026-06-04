@@ -1,0 +1,9 @@
+# YOLOv8 dataset config for PolypDB LCI modality
+# Run scripts/coco_to_yolo.py first to generate yolo_labels/
+path: yolo_labels/LCI
+train: train/images
+val:   val/images
+test:  test/images
+
+nc: 1
+names: ["polyp"]

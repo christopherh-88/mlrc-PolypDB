@@ -1,0 +1,10 @@
+# YOLOv8 center-wise config for Simula
+# Modalities: NBI, WLI
+# Run scripts/coco_to_yolo_centerwise.py first to generate yolo_labels/center/
+path: yolo_labels/center/Simula
+train: NBI/train/images
+val:   NBI/val/images
+test:  NBI/test/images
+
+nc: 1
+names: ["polyp"]
