@@ -30,7 +30,7 @@ from utils.metrics import RunningMetrics
 # ── args ──────────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
 parser.add_argument("--model",    default="unet",
-                    choices=["unet", "deeplabv3plus"])
+                    choices=["unet", "deeplabv3plus", "efficientnet_unet"])
 parser.add_argument("--modality", default="WLI",
                     choices=["BLI", "FICE", "LCI", "NBI", "WLI"])
 parser.add_argument("--epochs",     type=int,   default=100)
@@ -67,6 +67,13 @@ def build_model(name: str) -> nn.Module:
     elif name == "deeplabv3plus":
         return smp.DeepLabV3Plus(
             encoder_name="resnet50",
+            encoder_weights="imagenet",
+            in_channels=3,
+            classes=1,
+        )
+    elif name == "efficientnet_unet":
+        return smp.Unet(
+            encoder_name="efficientnet-b0",
             encoder_weights="imagenet",
             in_channels=3,
             classes=1,
