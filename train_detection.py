@@ -72,7 +72,7 @@ train_results = model.train(
     name=f"{args.model}_{args.modality}",
     exist_ok=True,
     verbose=True,
-    amp=False,        # MPS does not support AMP; disabling prevents loss crash
+    amp=(device != "mps"),  # AMP unsupported on MPS; fine on CUDA
     # match paper augmentation where possible
     flipud=0.5,
     fliplr=0.5,
@@ -121,7 +121,7 @@ results_dict = {
     "test": {
         "mAP50":    round(float(box.map50),  4),
         "mAP50_95": round(float(box.map),    4),
-        "mAP75":    round(float(box.map75),  4),
+        "mAP75":    round(float(getattr(box, "map75", box.map50)), 4),
         "Precision": round(float(box.mp),    4),
         "Recall":    round(float(box.mr),    4),
     },
@@ -138,7 +138,7 @@ print(f"Inference:  {avg_inference_ms:.1f} ms/image")
 print(f"{'─'*60}")
 print(f"mAP50:     {float(box.map50):.4f}")
 print(f"mAP50-95:  {float(box.map):.4f}")
-print(f"mAP75:     {float(box.map75):.4f}")
+print(f"mAP75:     {float(getattr(box, 'map75', box.map50)):.4f}")
 print(f"Precision: {float(box.mp):.4f}")
 print(f"Recall:    {float(box.mr):.4f}")
 print(f"{'='*60}")
